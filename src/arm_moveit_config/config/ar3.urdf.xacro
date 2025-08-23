@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ar3">
+
+    <!-- Import ar3 urdf file -->
+    <xacro:include filename="$(find arm_description)/urdf/ar3_moveit.urdf" />
+
+    <!-- Import control_xacro -->
+    <xacro:include filename="ar3.ros2_control.xacro" />
+
+
+    <xacro:ar3_ros2_control name="ArmGazeboSystem"/>
+
+</robot>
