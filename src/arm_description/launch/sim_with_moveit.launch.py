@@ -1,12 +1,10 @@
 import launch
 import launch.event_handlers
 import launch_ros
-import launch_ros.parameter_descriptions
 from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from moveit_configs_utils import MoveItConfigsBuilder
 from launch_ros.actions import Node
-from launch.actions import TimerAction
 from launch import LaunchDescription
 
 def generate_launch_description():
@@ -48,15 +46,6 @@ def generate_launch_description():
                     {'use_sim_time': True}, 
                     {'publish_fruquency': 30.0}],
     )
-
-    # Static TF 发布机械臂虚拟关节坐标系
-    # static_tf_node = Node(
-    #     package="tf2_ros", 
-    #     executable="static_transform_publisher", 
-    #     name="static_transform_publisher",
-    #     output="log", 
-    #     arguments=["--frame-id", "world", "--child-frame-id", "base_footprint"],
-    # )
 
     ##启动gazebo同时加载环境
     launch_gazebo = launch.actions.IncludeLaunchDescription(
@@ -105,17 +94,11 @@ def generate_launch_description():
                     {'use_sim_time': True}],
     )
 
-    # delayed_rviz = TimerAction(
-    #     period=10.0,  # 等待10秒确保所有系统就绪
-    #     actions=[rviz_node]
-    # )
-
     return LaunchDescription([
         # action_declare_arg_mode_path,
         action_declare_arg_world_path,
         launch_gazebo,
         robot_desc_node,
-        # static_tf_node,
         spawn_entity_node, 
 
         launch.actions.RegisterEventHandler(event_handler=launch.event_handlers.OnProcessExit(
