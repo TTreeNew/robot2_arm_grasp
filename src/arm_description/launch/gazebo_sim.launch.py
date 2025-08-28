@@ -15,13 +15,12 @@ def generate_launch_description():
     Includes
      * static_virtual_joint_tfs
      * robot_state_publisher
-     * move_group
      * ros2_control_node + controller spawners
     """
     robot_name="ros2_arm"
-    urdf_pkg_path=get_package_share_directory('arm_moveit_config')  ###允许传入model和world替换默认的相对路径
-    word_pkg_path=get_package_share_directory('arm_description')   ## car_description_pkg arm_description
-    default_model_path='/config/ar3.urdf.xacro'            ## /config/ar3.urdf.xacro  /urdf/fishbot/carbot.urdf.xacro
+    urdf_pkg_path=get_package_share_directory('arm_moveit_config')  
+    word_pkg_path=get_package_share_directory('arm_description')   ##  arm_description
+    default_model_path='/config/ar3.urdf.xacro'            ## /config/ar3.urdf.xacro 
     default_world_path='/world/world1.world'    ###允许传入model和world替换默认的相对路径
     
     action_declare_arg_mode_path = launch.actions.DeclareLaunchArgument(
@@ -41,6 +40,15 @@ def generate_launch_description():
     executable='robot_state_publisher',
     parameters=[{'robot_description':robot_description}])
 
+    # ros2_control_node = launch_ros.actions.Node(
+    #     package='controller_manager',
+    #     executable='ros2_control_node',
+    #     parameters=[
+    #         {'robot_description': robot_description},
+    #         urdf_pkg_path + '/config/ros2_controllers.yaml'
+    #     ],
+    #     output='screen'
+    # )
 
     ##启动gazebo同时加载环境
     launch_gazebo = launch.actions.IncludeLaunchDescription(
@@ -55,31 +63,31 @@ def generate_launch_description():
         arguments=['-topic', '/robot_description','-entity', robot_name]
     )
     ##加载关节状态控制器，先启动后加载##
-    load_joint_state_controller = launch.actions.ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', 'arm_joint_state_broadcaster', '--set-state', 'active'],
+    load_joint_state_broadcaster = launch.actions.ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', 'joint_state_broadcaster', '--set-state', 'active'],
         output='screen'
     )
 
             ##加载机械臂控制器##
     load_joint_trajectory_controller = launch.actions.ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller', 'arm_joint_trajectory_controller', '--set-state', 'active'],
+        cmd=['ros2', 'control', 'load_controller', 'arm_controller', '--set-state', 'active'],
         output='screen'
     )
 
     return launch.LaunchDescription([
         action_declare_arg_mode_path,
         action_declare_arg_world_path,
-        robot_state_publisher_node,
         launch_gazebo,
-        spawn_entity_node,
+        robot_state_publisher_node,
+        spawn_entity_node, 
 
         launch.actions.RegisterEventHandler(event_handler=launch.event_handlers.OnProcessExit(
             target_action=spawn_entity_node,
-            on_exit=[load_joint_state_controller],        
+            on_exit=[load_joint_state_broadcaster],        
         )),        
 
         launch.actions.RegisterEventHandler(event_handler=launch.event_handlers.OnProcessExit(
-            target_action=load_joint_state_controller,
+            target_action=load_joint_state_broadcaster,
             on_exit=[load_joint_trajectory_controller],        
         )),    
     ])

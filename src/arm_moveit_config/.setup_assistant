@@ -5,23 +5,21 @@ moveit_setup_assistant_config:
   srdf:
     relative_path: config/ar3.srdf
   package_settings:
-    author_name: tree
+    author_name: TTreeNew
     author_email: swang2792@gmail.com
-    generated_timestamp: 1751285367
+    generated_timestamp: 1756344024
   control_xacro:
     command:
       - position
-      - effort
     state:
       - position
-      - effort
+      - velocity
   modified_urdf:
     xacros:
       - control_xacro
   control_xacro:
     command:
       - position
-      - effort
     state:
       - position
-      - effort
+      - velocity

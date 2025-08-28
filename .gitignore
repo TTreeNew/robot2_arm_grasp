@@ -2,5 +2,5 @@ build/
 install/
 log/
 .vscode/
-*.txt
-*.urdf
+/修改.txt
+/generate_arm.urdf
