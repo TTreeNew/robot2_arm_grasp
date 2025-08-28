@@ -4,18 +4,19 @@ import launch_ros
 import launch_ros.parameter_descriptions
 from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-# from launch.actions import ExecuteProcess
 
 def generate_launch_description():
     """
     Launches gazebo with a robot model and environment
 
-    launch_package_path is optional to use different launch and config packages
+    launch_package_path is optional to use different robot model and environment
 
     Includes
-     * static_virtual_joint_tfs
+     * launch gazebo
      * robot_state_publisher
      * ros2_control_node + controller spawners
+     * joint_state_broadcaster
+     * arm_controller
     """
     robot_name="ros2_arm"
     urdf_pkg_path=get_package_share_directory('arm_moveit_config')  
@@ -39,16 +40,6 @@ def generate_launch_description():
     package='robot_state_publisher',
     executable='robot_state_publisher',
     parameters=[{'robot_description':robot_description}])
-
-    # ros2_control_node = launch_ros.actions.Node(
-    #     package='controller_manager',
-    #     executable='ros2_control_node',
-    #     parameters=[
-    #         {'robot_description': robot_description},
-    #         urdf_pkg_path + '/config/ros2_controllers.yaml'
-    #     ],
-    #     output='screen'
-    # )
 
     ##启动gazebo同时加载环境
     launch_gazebo = launch.actions.IncludeLaunchDescription(

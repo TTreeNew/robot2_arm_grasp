@@ -6,7 +6,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/base_link.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/base_link.STL" />
             </geometry>
             <material name="Orange">
                     <color rgba="1 0.5490 0.0 1.0"/>
@@ -15,7 +15,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/base_link.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/base_link.STL" />
             </geometry>
         </collision>
         <inertial>
@@ -33,7 +33,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_1.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_1.STL" />
             </geometry>
             <material name="">
                 <color rgba="1 1 0 1" />
@@ -42,7 +42,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_1.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_1.STL" />
             </geometry>
 
         </collision>
@@ -63,7 +63,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_2.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_2.STL" />
             </geometry>
             <material name="">
                 <color rgba="1 1 0 1" />
@@ -72,7 +72,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_2.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_2.STL" />
             </geometry>
         </collision>
         <inertial>
@@ -92,7 +92,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_3.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_3.STL" />
             </geometry>
             <material name="">
                 <color rgba="1 1 0 1" />
@@ -101,7 +101,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_3.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_3.STL" />
             </geometry>
         </collision>
         <inertial>
@@ -121,7 +121,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_4.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_4.STL" />
             </geometry>
             <material name="">
                 <color rgba="1 1 0 1" />
@@ -130,7 +130,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_4.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_4.STL" />
             </geometry>
         </collision>
         <inertial>
@@ -150,7 +150,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_5.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_5.STL" />
             </geometry>
             <material name="">
                 <color rgba="1 1 0 1" />
@@ -159,7 +159,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_5.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_5.STL" />
             </geometry>
         </collision>
         <inertial>
@@ -179,7 +179,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_6.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_6.STL" />
             </geometry>
             <material name="">
                 <color rgba="1 1 0 1" />
@@ -188,7 +188,7 @@
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <geometry>
-                <mesh filename="package://arm_description/meshes/link_6.STL" />
+                <mesh filename="file://$(find arm_description)/meshes/link_6.STL" />
             </geometry>
         </collision>
         <inertial>
@@ -335,6 +335,7 @@
     <gazebo>
         <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
             <parameters>$(find arm_moveit_config)/config/ros2_controllers.yaml</parameters>
+            <use_sim_time>true</use_sim_time>
         </plugin>
     </gazebo>
 </robot>

@@ -3,12 +3,25 @@
 ## 简介
 原项目是基于ros1的机械臂抓取项目。
 用ros2实现与原项目相差太大。我用ros2来实现，现在只完成了仿真文件的编写。
+借用了他的机械臂模型和mesh文件
 
+## 文件说明
+- arm_moveit_config文件是(moveit2配置助手)moveit2 setup assistant 生成的文件
+- arm_description包含机器人模型和启动gazebo，rviz2的launch文件
+- full_demo.launch.py 可以启动rviz2，具体启动内容见launch文件里的return LaunchDescription([………………])。是在纯rviz2里验证是否配置成功的，现在无法运行原因见"gazebo仿真之前的修改"部分。
+- gazebo_sim.launch.py 可以启动gazebo并加载控制器和机械臂。不能加载move_group。
+- sim_with_moveit.launch.py可以启动gazebo和rviz2 ，是对gazebo_sim.launch.py和full_demo.launch.py的综合。
+- launch文件中的full_demo.launch.py为对配置助手生成的demo.launch.py的重写，demo.launch.py非常不直观，所以重写，两者是等价的。[full_demo.launch.py参考地址](https://www.bilibili.com/video/BV1CshJzdEpU?spm_id_from=333.788.player.switch&vd_source=bffdb80b975508dc5f2dd69ec6999b3b)。
+  
 ## 运行
+鼠标点击进入ros2_arm_ws目录。在终端中打开。
+运行
+```bash
+source install/setup.bash 
+ros2 launch arm_description sim_with_moveit.launch.py 
+```
+ 启动gazebo仿真环境
 
-进入ros2_arm_ws目录。在终端中打开。
-运行source install/setup.bash 和 ros2 launch arm_description gazebo_sim.launch.py ，启动gazebo仿真环境
-打开新的终端运行rviz2，添加 RobotModel插件，调整Fixed Frame 和 topic 
 (待补充)
 
 ## 修改
@@ -35,11 +48,12 @@ default: true
 不然执行轨迹的时候找不到arm控制器无法完成execute。
 
 ### gazebo仿真之前的修改
-1.   把`<mesh filename="package://arm_description/meshes/base_link.STL" />`这种写mesh文件路径方式换成`<mesh filename="file://$(find arm_description)/meshes/base_link.STL" />`，这样之后rviz2和gazebo都能正常显示，否则gazebo无法解析mesh文件路径。但是这样之后moveit2调试助手又无法显示模型了，如果要使用moveit2调试助手又要改回原来的package://写法。
+1.   把`<mesh filename="package://arm_description/meshes/base_link.STL" />`这种写mesh文件路径方式换成`<mesh filename="file://$(find arm_description)/meshes/base_link.STL" />`，这样之后rviz2和gazebo都能正常显示，否则gazebo无法解析mesh文件路径。但是这样之后moveit2调试助手又无法显示模型了，如果要使用moveit2调试助手又要改回原来的package://写法。查找 `"package://arm_description` 换成 `"file://$(find arm_description)`
 2.  把`src/arm_moveit_config/config/ar3.ros2_control.xacro`里的`mock_components/GenericSystem`插件改成`gazebo_ros2_control/GazeboSystem`
 3. 把
-`src/arm_moveit_config/config/moveit_controllers.yaml`里的`moveit_simple_controller_manager/MoveItSimpleControllerManager`改成`moveit_ros2_controller_manager/MoveItRos2ControllerManager`
+`src/arm_moveit_config/config/moveit_controllers.yaml`里的`moveit_simple_controller_manager/MoveItSimpleControllerManager`改成`moveit_ros_control_interface/Ros2ControlManager`
 4. 找到moveit生成的config文件夹下的ros2_control.xacro，把里面的
 `<xacro:property name="initial_positions" value="${load_yaml(initial_positions_file)['initial_positions']}"/>`里的`load_yaml(`
 替换成
 `xacro.load_yaml(`。
+(使用gazebo+rviz2时注意{'use_sim_tim': True})
