@@ -7,7 +7,10 @@
   <maintainer email="swang2792@gmail.com">tree</maintainer>
   <license>Apache-2.0</license>
 
-  <depend>moveit</depend>
+  <depend>rclpy</depend>
+  <depend>moveit_core</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>moveit_configs_utils</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

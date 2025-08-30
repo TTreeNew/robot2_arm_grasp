@@ -13,7 +13,7 @@ planning_pipelines:
 
 plan_request_params:
   planning_attempts: 1
-  planning_pipeline: ompl
+  planning_pipeline: ompl   #Open Motion Planning Library是一个采样式运动规划 的开源库，提供多种路径规划算法
   max_velocity_scaling_factor: 1.0
   max_acceleration_scaling_factor: 1.0
 

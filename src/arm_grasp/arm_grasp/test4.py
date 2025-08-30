@@ -46,7 +46,7 @@ if __name__ == "__main__":
     rclpy.init()
     logger = get_logger("moveit_py.pose_goal")
 
-    path=__file__.split('motion_api/test')[0]+'config/moveit_cpp.yaml'
+    path=__file__.split('motion_api/test4')[0]+'config/moveit_cpp.yaml' #__file__是内置变量代表当前执行的文件的路径。[0]代表截取路径中motion_api/test之前的部分
 
     print(f'moveit cpp config path is :(path)')
     
@@ -62,5 +62,28 @@ if __name__ == "__main__":
 
     # instantiate MoveItPy instance and get planning component 
     robot = MoveItPy(node_name="moveit_py", config_dict=params)
+    arm_group = robot.get_planning_component("arm") ####
     logger.info("MoveItPy instance created")
     print(robot)
+
+
+
+    # set plan start state to current state
+    arm_group.set_start_state_to_current_state()
+
+    # set pose goal with PoseStamped message
+    arm_group.set_goal_state(configuration_name="ready")
+
+    # initialise multi-pipeline plan request parameters
+    multi_pipeline_plan_request_params = MultiPipelinePlanRequestParameters(
+    robot,["ompl_rrtc", "pilz_lin", "chomp_planner"]
+    )
+
+    # plan to goal
+    plan_and_execute(
+        robot, 
+        arm_group, 
+        logger, 
+        multi_plan_parameters=multi_pipeline_plan_request_params, 
+        sleep_time=3.0,
+    )

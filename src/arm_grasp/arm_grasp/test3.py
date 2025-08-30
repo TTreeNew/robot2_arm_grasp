@@ -46,7 +46,7 @@ if __name__ == "__main__":
     rclpy.init()
     logger = get_logger("moveit_py.pose_goal")
 
-    path=__file__.split('motion_api/test')[0]+'config/moveit_cpp.yaml'
+    path=__file__.split('motion_api/test3')[0]+'config/moveit_cpp.yaml'
 
     print(f'moveit cpp config path is :(path)')
     
@@ -62,5 +62,27 @@ if __name__ == "__main__":
 
     # instantiate MoveItPy instance and get planning component 
     robot = MoveItPy(node_name="moveit_py", config_dict=params)
+    arm_group = robot.get_planning_component("arm")
     logger.info("MoveItPy instance created")
     print(robot)
+
+
+    # 设置机械臂起始位置为当前状态位置
+    arm_group.set_start_state_to_current_state()
+
+    # set pose goal with PoseStamped message 
+    from geometry_msgs.msg import PoseStamped 
+    
+    pose_goal = PoseStamped()
+    pose_goal.header.frame_id = "base_link" #表示这个位姿是在哪个参考坐标系下定义的。通常是 机器人底座 或世界坐标系。
+    pose_goal.pose.orientation.x = 0.71
+    pose_goal.pose.orientation.y = 0.71
+
+    pose_goal.pose.position.x = 0.0
+    pose_goal.pose.position.y = 0.68
+    pose_goal.pose.position.z =0.17  
+    #设置目标位置为指定的直角坐标系位置
+    arm_group.set_goal_state(pose_stamped_msg=pose_goal, pose_link="gripper_base_link") #表示你希望最终到达目标位姿的末端执行器链接名称。
+    
+    #进行路径规划并执行
+    plan_and_execute(robot, arm_group, logger, sleep_time=3.0)
