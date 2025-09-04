@@ -12,7 +12,7 @@ def plan_and_execute(
     robot, 
     planning_component, 
     logger, 
-    single_plan_parameters=None, multi_plan_parameters=None, sleep time=3.0, 
+    single_plan_parameters=None, multi_plan_parameters=None, sleep_time=3.0, 
 ):
     """Helper function to plan and execute a mdeion."""
     # plan to goal

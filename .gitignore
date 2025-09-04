@@ -3,4 +3,5 @@ install/
 log/
 .vscode/
 /修改.txt
+/操作.txt
 /generate_arm.urdf

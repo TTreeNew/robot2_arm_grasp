@@ -2,8 +2,8 @@
 
 ## 简介
 原项目是基于ros1的机械臂抓取项目。
-用ros2实现与原项目相差太大。我用ros2来实现，现在只完成了仿真文件的编写。
-借用了他的机械臂模型和mesh文件
+用ros2实现与原项目相差太大。我用ros2来实现，现在完成了仿真文件的编写。并且用cpp接口控制gazebo的机械臂。
+借用了他的机械臂模型和mesh文件。
 
 ## 文件说明
 - arm_moveit_config文件是(moveit2配置助手)moveit2 setup assistant 生成的文件
@@ -14,13 +14,18 @@
 - launch文件中的full_demo.launch.py为对配置助手生成的demo.launch.py的重写，demo.launch.py非常不直观，所以重写，两者是等价的。[full_demo.launch.py参考地址](https://www.bilibili.com/video/BV1CshJzdEpU?spm_id_from=333.788.player.switch&vd_source=bffdb80b975508dc5f2dd69ec6999b3b)。
   
 ## 运行
-鼠标点击进入ros2_arm_ws目录。在终端中打开。
-运行
+鼠标点击进入ros2_arm_ws目录。在终端中打开。运行下面命令，启动gazebo仿真环境。
 ```bash
 source install/setup.bash 
 ros2 launch arm_description sim_with_moveit.launch.py 
 ```
- 启动gazebo仿真环境
+
+接着在ros2_arm_ws目录下打开新的终端。运行下面命令，对机械臂进行简单的控制
+```bash
+source install/setup.bash 
+ros2 run arm_grasp_cpp arm_test1 --ros-args --params-file arm_params.yaml
+```
+启动arm_test2.cpp的时候可以把rviz2里的motionplanning插件移除，添加robotmodel插件，话题选择robot_description，这样就能看到rviz的机械臂随着gazebo的机械臂一起动。
 
 (待补充)
 
@@ -57,3 +62,14 @@ default: true
 替换成
 `xacro.load_yaml(`。
 (使用gazebo+rviz2时注意{'use_sim_tim': True})
+5. 工作空间下的`arm_params.yaml`是为了单独用run来启动arm_test1.cpp生成的。这样就不用在我的`sim_with_moveit.launch.py`里添加启动arm_test1.cpp节点的代码了。生成方法是启动`sim_with_moveit.launch.py`之后运行
+```bash
+ros2 param dump /move_group > arm_params.yaml
+```
+然后①把生成的yaml文件最外层的命名空间换成 arm_test1 ，即把 ros__parameters 上面的那个 move_group 换成 arm_test1 ②把除
+```yaml
+arm: 
+  kinematics_solver: null
+```
+外所有的值为null的行全部删除③把`kinematics_solver: null`换成`kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin`
+    

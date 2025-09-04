@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     path=__file__.split('motion_api/test3')[0]+'config/moveit_cpp.yaml'
 
-    print(f'moveit cpp config path is :(path)')
+    print(f'moveit cpp config path is :path')
     
     moveit_config =(
         MoveItConfigsBuilder(

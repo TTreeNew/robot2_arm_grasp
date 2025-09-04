@@ -6,6 +6,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from moveit_configs_utils import MoveItConfigsBuilder
 from launch_ros.actions import Node
 from launch import LaunchDescription
+# from launch.actions import TimerAction
 
 def generate_launch_description():
     """
@@ -44,7 +45,7 @@ def generate_launch_description():
         output="both", 
         parameters=[moveit_config.robot_description,
                     {'use_sim_time': True}, 
-                    {'publish_fruquency': 30.0}],
+                    {'publish_frequency': 30.0}],
     )
 
     ##启动gazebo同时加载环境

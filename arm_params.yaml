@@ -1,0 +1,524 @@
+arm_test1:
+  ros__parameters:
+    arm: 
+      kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+    chomp:
+      enable_failure_recovery: true
+      jiggle_fraction: 0.05
+      planning_plugin: chomp_interface/CHOMPPlanner
+      request_adapters: 
+        - default_planner_request_adapters/AddTimeOptimalParameterization
+        - default_planner_request_adapters/ResolveConstraintFrames 
+        - default_planner_request_adapters/FixWorkspaceBounds
+        - default_planner_request_adapters/FixStartStateBounds 
+        - default_planner_request_adapters/FixStartStateCollision
+        - default_planner_request_adapters/FixStartStatePathConstraints
+      ridge_factor: 0.01
+      start_state_max_bounds_error: 0.1
+    default_planning_pipeline: ompl
+    default_sensor:
+      far_clipping_plane_distance: 5.0
+      filtered_cloud_topic: filtered_cloud
+      image_topic: /head_mount_kinect/depth_registered/image_raw
+      max_update_rate: 1.0
+      near_clipping_plane_distance: 0.3
+      padding_offset: 0.03
+      padding_scale: 4.0
+      queue_size: 5
+      sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+      shadow_threshold: 0.2
+    filtered_depth:
+      enable_pub_plugins:
+      - image_transport/raw
+    filtered_label:
+      enable_pub_plugins:
+      - image_transport/raw
+    kinect_depthimage:
+      far_clipping_plane_distance: 5.0
+      filtered_cloud_topic: filtered_cloud
+      image_topic: /head_mount_kinect/depth_registered/image_raw
+      max_update_rate: 1.0
+      near_clipping_plane_distance: 0.3
+      padding_offset: 0.03
+      padding_scale: 4.0
+      queue_size: 5
+      sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+      shadow_threshold: 0.2
+    model_depth:
+      enable_pub_plugins:
+      - image_transport/raw
+    moveit_controller_manager: moveit_ros_control_interface/Ros2ControlManager
+    moveit_manage_controllers: true
+    moveit_simple_controller_manager:
+      arm_controller:
+        action_ns: follow_joint_trajectory
+        default: true
+        joints:
+        - joint_1
+        - joint_2
+        - joint_3
+        - joint_4
+        - joint_5
+        - joint_6
+        type: FollowJointTrajectory
+      controller_names:
+      - arm_controller
+    ompl:
+      jiggle_fraction: 0.05
+      planner_configs:
+        AnytimePathShortening:
+          hybridize: 1
+          max_hybrid_paths: 24
+          num_planners: 4
+          planners: ''
+          shortcut: 1
+          type: geometric::AnytimePathShortening
+        BFMT:
+          balanced: 0
+          cache_cc: 1
+          extended_fmt: 1
+          heuristics: 1
+          nearest_k: 1
+          num_samples: 1000
+          optimality: 1
+          radius_multiplier: 1.0
+          type: geometric::BFMT
+        BKPIECE:
+          border_fraction: 0.9
+          failed_expansion_score_factor: 0.5
+          min_valid_path_fraction: 0.5
+          range: 0.0
+          type: geometric::BKPIECE
+        BiEST:
+          range: 0.0
+          type: geometric::BiEST
+        BiTRRT:
+          cost_threshold: 1.0e+300
+          frountier_node_ratio: 0.1
+          frountier_threshold: 0.0
+          init_temperature: 100
+          range: 0.0
+          temp_change_factor: 0.1
+          type: geometric::BiTRRT
+        EST:
+          goal_bias: 0.05
+          range: 0.0
+          type: geometric::EST
+        FMT:
+          cache_cc: 1
+          extended_fmt: 1
+          heuristics: 0
+          nearest_k: 1
+          num_samples: 1000
+          radius_multiplier: 1.1
+          type: geometric::FMT
+        KPIECE:
+          border_fraction: 0.9
+          failed_expansion_score_factor: 0.5
+          goal_bias: 0.05
+          min_valid_path_fraction: 0.5
+          range: 0.0
+          type: geometric::KPIECE
+        LBKPIECE:
+          border_fraction: 0.9
+          min_valid_path_fraction: 0.5
+          range: 0.0
+          type: geometric::LBKPIECE
+        LBTRRT:
+          epsilon: 0.4
+          goal_bias: 0.05
+          range: 0.0
+          type: geometric::LBTRRT
+        LazyPRM:
+          range: 0.0
+          type: geometric::LazyPRM
+        LazyPRMstar:
+          type: geometric::LazyPRMstar
+        PDST:
+          type: geometric::PDST
+        PRM:
+          max_nearest_neighbors: 10
+          type: geometric::PRM
+        PRMstar:
+          type: geometric::PRMstar
+        ProjEST:
+          goal_bias: 0.05
+          range: 0.0
+          type: geometric::ProjEST
+        RRT:
+          goal_bias: 0.05
+          range: 0.0
+          type: geometric::RRT
+        RRTConnect:
+          range: 0.0
+          type: geometric::RRTConnect
+        RRTstar:
+          delay_collision_checking: 1
+          goal_bias: 0.05
+          range: 0.0
+          type: geometric::RRTstar
+        SBL:
+          range: 0.0
+          type: geometric::SBL
+        SPARS:
+          dense_delta_fraction: 0.001
+          max_failures: 1000
+          sparse_delta_fraction: 0.25
+          stretch_factor: 3.0
+          type: geometric::SPARS
+        SPARStwo:
+          dense_delta_fraction: 0.001
+          max_failures: 5000
+          sparse_delta_fraction: 0.25
+          stretch_factor: 3.0
+          type: geometric::SPARStwo
+        STRIDE:
+          degree: 16
+          estimated_dimension: 0.0
+          goal_bias: 0.05
+          max_degree: 18
+          max_pts_per_leaf: 6
+          min_degree: 12
+          min_valid_path_fraction: 0.2
+          range: 0.0
+          type: geometric::STRIDE
+          use_projected_distance: 0
+        TRRT:
+          frountierNodeRatio: 0.1
+          frountier_threshold: 0.0
+          goal_bias: 0.05
+          init_temperature: 1.0e-05
+          k_constant: 0.0
+          max_states_failed: 10
+          min_temperature: 1.0e-09
+          range: 0.0
+          temp_change_factor: 2.0
+          type: geometric::TRRT
+      planning_plugin: ompl_interface/OMPLPlanner
+      request_adapters: default_planner_request_adapters/AddTimeOptimalParameterization
+        default_planner_request_adapters/ResolveConstraintFrames default_planner_request_adapters/FixWorkspaceBounds
+        default_planner_request_adapters/FixStartStateBounds default_planner_request_adapters/FixStartStateCollision
+        default_planner_request_adapters/FixStartStatePathConstraints
+      start_state_max_bounds_error: 0.1
+    pilz_industrial_motion_planner:
+      capabilities: pilz_industrial_motion_planner/MoveGroupSequenceAction pilz_industrial_motion_planner/MoveGroupSequenceService
+      default_planner_config: PTP
+      planning_plugin: pilz_industrial_motion_planner/CommandPlanner
+      request_adapters: ''
+    planning_pipelines:
+    - pilz_industrial_motion_planner
+    - ompl
+    - chomp
+    publish_geometry_updates: true
+    publish_planning_scene: true
+    publish_robot_description: false
+    publish_robot_description_semantic: false
+    publish_state_updates: true
+    publish_transforms_updates: true
+    qos_overrides:
+      /clock:
+        subscription:
+          depth: 1
+          durability: volatile
+          history: keep_last
+          reliability: best_effort
+      /parameter_events:
+        publisher:
+          depth: 1000
+          durability: volatile
+          history: keep_last
+          reliability: reliable
+    robot_description: "<?xml version=\"1.0\" ?><!-- ===================================================================================\
+      \ --><!-- |    This document was autogenerated by xacro from /home/tree/ros2_arm_ws/install/arm_moveit_config/share/arm_moveit_config/config/ar3.urdf.xacro\
+      \ | --><!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED              \
+      \                   | --><!-- ===================================================================================\
+      \ --><robot name=\"ar3\"><link name=\"base_footprint\"/><link name=\"base_link\"\
+      ><visual><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/base_link.STL\"\
+      /></geometry><material name=\"Orange\"><color rgba=\"1 0.5490 0.0 1.0\"/></material></visual><collision><origin\
+      \ rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/base_link.STL\"\
+      /></geometry></collision><inertial><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><mass\
+      \ value=\"20\"/><inertia ixx=\"1E-2\" ixy=\"0\" ixz=\"0\" iyy=\"1E-2\" iyz=\"\
+      0\" izz=\"1E-2\"/></inertial></link><joint name=\"base_link2base_footprint\"\
+      \ type=\"fixed\"><parent link=\"base_footprint\"/><child link=\"base_link\"\
+      /><origin xyz=\"0 0 0\"/></joint><link name=\"link_1\"><visual><origin rpy=\"\
+      0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_1.STL\"\
+      /></geometry><material name=\"\"><color rgba=\"1 1 0 1\"/></material></visual><collision><origin\
+      \ rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_1.STL\"\
+      /></geometry></collision><inertial><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><mass\
+      \ value=\"0.01\"/><inertia ixx=\"1E-2\" ixy=\"0\" ixz=\"0\" iyy=\"1E-2\" iyz=\"\
+      0\" izz=\"1E-2\"/></inertial></link><joint name=\"joint_1\" type=\"revolute\"\
+      ><origin rpy=\"3.1415926 0 0\" xyz=\"0 0 0.003445\"/><parent link=\"base_link\"\
+      /><child link=\"link_1\"/><axis xyz=\"0 0 1\"/><limit effort=\"1E8\" lower=\"\
+      -2.96706\" upper=\"2.96706\" velocity=\"0.5\"/></joint><link name=\"link_2\"\
+      ><visual><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_2.STL\"\
+      /></geometry><material name=\"\"><color rgba=\"1 1 0 1\"/></material></visual><collision><origin\
+      \ rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_2.STL\"\
+      /></geometry></collision><inertial><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><mass\
+      \ value=\"0.01\"/><inertia ixx=\"1E-3\" ixy=\"0\" ixz=\"0\" iyy=\"1E-3\" iyz=\"\
+      0\" izz=\"1E-3\"/></inertial></link><joint name=\"joint_2\" type=\"revolute\"\
+      ><origin rpy=\"1.5708 0.5236 -1.5708\" xyz=\"0 0.064146 -0.16608\"/><parent\
+      \ link=\"link_1\"/><child link=\"link_2\"/><axis xyz=\"0 0 -1\"/><limit effort=\"\
+      1E15\" lower=\"-0.6911503720000001\" upper=\"1.5707963\" velocity=\"0.5\"/></joint><link\
+      \ name=\"link_3\"><visual><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh\
+      \ filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_3.STL\"\
+      /></geometry><material name=\"\"><color rgba=\"1 1 0 1\"/></material></visual><collision><origin\
+      \ rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_3.STL\"\
+      /></geometry></collision><inertial><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><mass\
+      \ value=\"0.01\"/><inertia ixx=\"1E-3\" ixy=\"0\" ixz=\"0\" iyy=\"1E-3\" iyz=\"\
+      0\" izz=\"1E-3\"/></inertial></link><joint name=\"joint_3\" type=\"revolute\"\
+      ><origin rpy=\"0 0 -1.04720367321\" xyz=\"0.1525 -0.26414 0\"/><parent link=\"\
+      link_2\"/><child link=\"link_3\"/><axis xyz=\"0 0 -1\"/><limit effort=\"1E8\"\
+      \ lower=\"0.0174533\" upper=\"2.5080381\" velocity=\"0.5\"/></joint><link name=\"\
+      link_4\"><visual><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"\
+      file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_4.STL\"\
+      /></geometry><material name=\"\"><color rgba=\"1 1 0 1\"/></material></visual><collision><origin\
+      \ rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_4.STL\"\
+      /></geometry></collision><inertial><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><mass\
+      \ value=\"0.01\"/><inertia ixx=\"1E-3\" ixy=\"0\" ixz=\"0\" iyy=\"1E-3\" iyz=\"\
+      0\" izz=\"1E-3\"/></inertial></link><joint name=\"joint_4\" type=\"revolute\"\
+      ><origin rpy=\"1.5708 -1.2554 -1.5708\" xyz=\"0 0 0.00675\"/><parent link=\"\
+      link_3\"/><child link=\"link_4\"/><axis xyz=\"0 0 -1\"/><limit effort=\"1E8\"\
+      \ lower=\"-2.8710666\" upper=\"2.8710666\" velocity=\"0.5\"/></joint><link name=\"\
+      link_5\"><visual><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"\
+      file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_5.STL\"\
+      /></geometry><material name=\"\"><color rgba=\"1 1 0 1\"/></material></visual><collision><origin\
+      \ rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_5.STL\"\
+      /></geometry></collision><inertial><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><mass\
+      \ value=\"0.01\"/><inertia ixx=\"1E-3\" ixy=\"0\" ixz=\"0\" iyy=\"1E-3\" iyz=\"\
+      0\" izz=\"1E-3\"/></inertial></link><joint name=\"joint_5\" type=\"revolute\"\
+      ><origin rpy=\"3.1415926 0 -2.8262\" xyz=\"0 0 -0.22225\"/><parent link=\"link_4\"\
+      /><child link=\"link_5\"/><axis xyz=\"1 0 0\"/><limit effort=\"1E8\" lower=\"\
+      -1.81776042\" upper=\"1.81776042\" velocity=\"0.5\"/></joint><link name=\"link_6\"\
+      ><visual><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_6.STL\"\
+      /></geometry><material name=\"\"><color rgba=\"1 1 0 1\"/></material></visual><collision><origin\
+      \ rpy=\"0 0 0\" xyz=\"0 0 0\"/><geometry><mesh filename=\"file:///home/tree/ros2_arm_ws/install/arm_description/share/arm_description/meshes/link_6.STL\"\
+      /></geometry></collision><inertial><origin rpy=\"0 0 0\" xyz=\"0 0 0\"/><mass\
+      \ value=\"0.01\"/><inertia ixx=\"1E-3\" ixy=\"0\" ixz=\"0\" iyy=\"1E-3\" iyz=\"\
+      0\" izz=\"1E-3\"/></inertial></link><joint name=\"joint_6\" type=\"revolute\"\
+      ><origin rpy=\"0 0 3.1416\" xyz=\"-0.000294 0 0.02117\"/><parent link=\"link_5\"\
+      /><child link=\"link_6\"/><axis xyz=\"0 0 1\"/><limit effort=\"1E8\" lower=\"\
+      -2.5848326\" upper=\"2.5848326\" velocity=\"0.5\"/></joint><link name=\"camera_link\"\
+      ><visual><origin rpy=\"0 0 1.5707963\" xyz=\"0 0 0\"/><geometry><box size=\"\
+      0.01 0.005 0.01\"/></geometry></visual><collision><origin rpy=\"0 0 1.5707963\"\
+      \ xyz=\"0 0 0\"/><geometry><box size=\"0.01 0.005 0.01\"/></geometry></collision><inertial><origin\
+      \ rpy=\"0 0 1.5707963\" xyz=\"0 0 0\"/><mass value=\"0.001\"/><inertia ixx=\"\
+      1.04167E-7\" ixy=\"0\" ixz=\"0\" iyy=\"1.66667E-7\" iyz=\"0\" izz=\"1.04167E-7\"\
+      /></inertial></link><joint name=\"camera_joint\" type=\"fixed\"><origin rpy=\"\
+      1.5707963 -1.5707963 0\" xyz=\"0 0 0.016\"/><!-- <origin rpy=\"0 0 0\" xyz=\"\
+      0.044 0.023 0.1\" /> --><parent link=\"link_6\"/><child link=\"camera_link\"\
+      /><axis xyz=\"0 0 0\"/></joint><!-- camera --><gazebo reference=\"camera_link\"\
+      ><sensor name=\"RGBcamera\" type=\"camera\"><update_rate>30</update_rate><camera\
+      \ name=\"gripper_camera\"><horizontal_fov>1.5707963</horizontal_fov><image><width>1280</width><height>720</height><format>R8G8B8</format></image><clip><near>0.02</near><far>300</far></clip><noise><type>gaussian</type><mean>0.0</mean><stddev>0.007</stddev></noise></camera><plugin\
+      \ filename=\"libgazebo_ros_camera.so\" name=\"camera_controller\"><alwaysOn>true</alwaysOn><updateRate>0.0</updateRate><camera_name>/gripper_camera</camera_name><image_topic_name>image_raw</image_topic_name><cameraInfo_topic_name>camera_info</cameraInfo_topic_name><frame_name>camera_link</frame_name><hackBaseline>0.07</hackBaseline><distortionK1>0.0</distortionK1><distortionK2>0.0</distortionK2><distortionK3>0.0</distortionK3><distortionT1>0.0</distortionT1><distortionT2>0.0</distortionT2></plugin></sensor><sensor\
+      \ name=\"gripper_laser\" type=\"ray\"><pose>0 0 0 0 0 0</pose><visualize>true</visualize><update_rate>30</update_rate><ray><scan><horizontal><samples>20</samples><resolution>1</resolution><min_angle>-0.08726646</min_angle><max_angle>0.08726646</max_angle></horizontal></scan><range><min>0.01</min><max>1.0</max><resolution>0.01</resolution></range><noise><type>gaussian</type><mean>0.0</mean><stddev>0.01</stddev></noise></ray><plugin\
+      \ filename=\"libgazebo_ros_ray_sensor.so\" name=\"gripper_laser_controller\"\
+      ><topic_name>/gripper/laser/scan</topic_name><frame_name>camera_link</frame_name></plugin></sensor></gazebo><gazebo\
+      \ reference=\"base_link\"><material>Gazebo/Orange</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo\
+      \ reference=\"link_1\"><material>Gazebo/Green</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo\
+      \ reference=\"link_2\"><material>Gazebo/Grey</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo\
+      \ reference=\"link_3\"><material>Gazebo/Green</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo\
+      \ reference=\"link_4\"><material>Gazebo/Grey</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo\
+      \ reference=\"link_5\"><material>Gazebo/Green</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo\
+      \ reference=\"link_6\"><material>Gazebo/Grey</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo\
+      \ reference=\"camera_link\"><material>Gazebo/Red</material><turnGravityOff>false</turnGravityOff></gazebo><gazebo><plugin\
+      \ filename=\"libgazebo_ros2_control.so\" name=\"gazebo_ros2_control\"><parameters>/home/tree/ros2_arm_ws/install/arm_moveit_config/share/arm_moveit_config/config/ros2_controllers.yaml</parameters><use_sim_time>true</use_sim_time></plugin></gazebo><ros2_control\
+      \ name=\"FakeSystem\" type=\"system\"><hardware><!-- By default, set up controllers\
+      \ for simulation. This won't work on real hardware --><!--mock_components/GenericSystem\
+      \ \u548C gazebo_ros2_control/GazeboSystem--><plugin>gazebo_ros2_control/GazeboSystem</plugin></hardware><joint\
+      \ name=\"joint_1\"><command_interface name=\"position\"/><state_interface name=\"\
+      position\"><param name=\"initial_value\">0</param></state_interface><state_interface\
+      \ name=\"velocity\"/></joint><joint name=\"joint_2\"><command_interface name=\"\
+      position\"/><state_interface name=\"position\"><param name=\"initial_value\"\
+      >0</param></state_interface><state_interface name=\"velocity\"/></joint><joint\
+      \ name=\"joint_3\"><command_interface name=\"position\"/><state_interface name=\"\
+      position\"><param name=\"initial_value\">0</param></state_interface><state_interface\
+      \ name=\"velocity\"/></joint><joint name=\"joint_4\"><command_interface name=\"\
+      position\"/><state_interface name=\"position\"><param name=\"initial_value\"\
+      >0</param></state_interface><state_interface name=\"velocity\"/></joint><joint\
+      \ name=\"joint_5\"><command_interface name=\"position\"/><state_interface name=\"\
+      position\"><param name=\"initial_value\">0</param></state_interface><state_interface\
+      \ name=\"velocity\"/></joint><joint name=\"joint_6\"><command_interface name=\"\
+      position\"/><state_interface name=\"position\"><param name=\"initial_value\"\
+      >0</param></state_interface><state_interface name=\"velocity\"/></joint></ros2_control></robot>"
+    robot_description_kinematics:
+      arm:
+        kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+        kinematics_solver_search_resolution: 0.005
+        kinematics_solver_timeout: 0.005
+    robot_description_planning:
+      cartesian_limits:
+        max_rot_vel: 1.57
+        max_trans_acc: 2.25
+        max_trans_dec: -5.0
+        max_trans_vel: 1.0
+      default_acceleration_scaling_factor: 0.1
+      default_velocity_scaling_factor: 0.1
+      joint_limits:
+        joint_1:
+          angle_wraparound: false
+          has_acceleration_limits: true
+          has_deceleration_limits: false
+          has_effort_limits: false
+          has_position_limits: false
+          has_soft_limits: false
+          has_velocity_limits: true
+          k_position: .nan
+          k_velocity: .nan
+          max_acceleration: 2.0
+          max_effort: .nan
+          max_jerk: .nan
+          max_velocity: 3.0
+          min_velocity: .nan
+          soft_lower_limit: .nan
+          soft_upper_limit: .nan
+        joint_2:
+          angle_wraparound: false
+          has_acceleration_limits: true
+          has_deceleration_limits: false
+          has_effort_limits: false
+          has_position_limits: false
+          has_soft_limits: false
+          has_velocity_limits: true
+          k_position: .nan
+          k_velocity: .nan
+          max_acceleration: 2.0
+          max_effort: .nan
+          max_jerk: .nan
+          max_velocity: 3.0
+          min_velocity: .nan
+          soft_lower_limit: .nan
+          soft_upper_limit: .nan
+        joint_3:
+          angle_wraparound: false
+          has_acceleration_limits: true
+          has_deceleration_limits: false
+          has_effort_limits: false
+          has_position_limits: false
+          has_soft_limits: false
+          has_velocity_limits: true
+          k_position: .nan
+          k_velocity: .nan
+          max_acceleration: 2.0
+          max_effort: .nan
+          max_jerk: .nan
+          max_velocity: 3.0
+          min_velocity: .nan
+          soft_lower_limit: .nan
+          soft_upper_limit: .nan
+        joint_4:
+          angle_wraparound: false
+          has_acceleration_limits: true
+          has_deceleration_limits: false
+          has_effort_limits: false
+          has_position_limits: false
+          has_soft_limits: false
+          has_velocity_limits: true
+          k_position: .nan
+          k_velocity: .nan
+          max_acceleration: 2.0
+          max_effort: .nan
+          max_jerk: .nan
+          max_velocity: 3.0
+          min_velocity: .nan
+          soft_lower_limit: .nan
+          soft_upper_limit: .nan
+        joint_5:
+          angle_wraparound: false
+          has_acceleration_limits: true
+          has_deceleration_limits: false
+          has_effort_limits: false
+          has_position_limits: false
+          has_soft_limits: false
+          has_velocity_limits: true
+          k_position: .nan
+          k_velocity: .nan
+          max_acceleration: 2.0
+          max_effort: .nan
+          max_jerk: .nan
+          max_velocity: 3.0
+          min_velocity: .nan
+          soft_lower_limit: .nan
+          soft_upper_limit: .nan
+        joint_6:
+          angle_wraparound: false
+          has_acceleration_limits: true
+          has_deceleration_limits: false
+          has_effort_limits: false
+          has_position_limits: false
+          has_soft_limits: false
+          has_velocity_limits: true
+          k_position: .nan
+          k_velocity: .nan
+          max_acceleration: 2.0
+          max_effort: .nan
+          max_jerk: .nan
+          max_velocity: 3.0
+          min_velocity: .nan
+          soft_lower_limit: .nan
+          soft_upper_limit: .nan
+    robot_description_semantic: "<?xml version=\"1.0\" ?><!-- ===================================================================================\
+      \ --><!-- |    This document was autogenerated by xacro from /home/tree/ros2_arm_ws/install/arm_moveit_config/share/arm_moveit_config/config/ar3.srdf\
+      \ | --><!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED              \
+      \                   | --><!-- ===================================================================================\
+      \ --><!--This does not replace URDF, and is not an extension of URDF.\n    This\
+      \ is a format for representing semantic information about the robot structure.\n\
+      \    A URDF file must exist for this robot as well, where the joints and the\
+      \ links that are referenced are defined\n--><robot name=\"ar3\"><!--GROUPS:\
+      \ Representation of a set of joints and links. This can be useful for specifying\
+      \ DOF to plan for, defining arms, end effectors, etc--><!--LINKS: When a link\
+      \ is specified, the parent joint of that link (if it exists) is automatically\
+      \ included--><!--JOINTS: When a joint is specified, the child link of that joint\
+      \ (which will always exist) is automatically included--><!--CHAINS: When a chain\
+      \ is specified, all the links along the chain (including endpoints) are included\
+      \ in the group. Additionally, all the joints that are parents to included links\
+      \ are also included. This means that joints along the chain and the parent joint\
+      \ of the base link are included in the group--><!--SUBGROUPS: Groups can also\
+      \ be formed by referencing to already defined group names--><group name=\"arm\"\
+      ><joint name=\"virtual_joint\"/><joint name=\"base_link2base_footprint\"/><joint\
+      \ name=\"joint_1\"/><joint name=\"joint_2\"/><joint name=\"joint_3\"/><joint\
+      \ name=\"joint_4\"/><joint name=\"joint_5\"/><joint name=\"joint_6\"/><joint\
+      \ name=\"camera_joint\"/></group><!--GROUP STATES: Purpose: Define a named state\
+      \ for a particular group, in terms of joint values. This is useful to define\
+      \ states like 'folded arms'--><group_state group=\"arm\" name=\"init_pose\"\
+      ><joint name=\"joint_1\" value=\"-2.967\"/><joint name=\"joint_2\" value=\"\
+      0.0087\"/><joint name=\"joint_3\" value=\"1.7099\"/><joint name=\"joint_4\"\
+      \ value=\"0.1428\"/><joint name=\"joint_5\" value=\"1.416\"/><joint name=\"\
+      joint_6\" value=\"-0.7569\"/></group_state><!--END EFFECTOR: Purpose: Represent\
+      \ information about an end effector.--><end_effector group=\"arm\" name=\"hand\"\
+      \ parent_link=\"camera_link\"/><!--VIRTUAL JOINT: Purpose: this element defines\
+      \ a virtual joint between a robot link and an external frame of reference (considered\
+      \ fixed with respect to the robot)--><virtual_joint child_link=\"base_footprint\"\
+      \ name=\"virtual_joint\" parent_frame=\"world\" type=\"fixed\"/><!--DISABLE\
+      \ COLLISIONS: By default it is assumed that any link of the robot could potentially\
+      \ come into collision with any other link in the robot. This tag disables collision\
+      \ checking between a specified pair of links. --><disable_collisions link1=\"\
+      base_link\" link2=\"link_1\" reason=\"Adjacent\"/><disable_collisions link1=\"\
+      base_link\" link2=\"link_2\" reason=\"Never\"/><disable_collisions link1=\"\
+      base_link\" link2=\"link_3\" reason=\"Never\"/><disable_collisions link1=\"\
+      base_link\" link2=\"link_4\" reason=\"Never\"/><disable_collisions link1=\"\
+      base_link\" link2=\"link_5\" reason=\"Never\"/><disable_collisions link1=\"\
+      camera_link\" link2=\"link_1\" reason=\"Never\"/><disable_collisions link1=\"\
+      camera_link\" link2=\"link_2\" reason=\"Never\"/><disable_collisions link1=\"\
+      camera_link\" link2=\"link_3\" reason=\"Never\"/><disable_collisions link1=\"\
+      camera_link\" link2=\"link_4\" reason=\"Never\"/><disable_collisions link1=\"\
+      camera_link\" link2=\"link_5\" reason=\"Default\"/><disable_collisions link1=\"\
+      camera_link\" link2=\"link_6\" reason=\"Adjacent\"/><disable_collisions link1=\"\
+      link_1\" link2=\"link_2\" reason=\"Adjacent\"/><disable_collisions link1=\"\
+      link_1\" link2=\"link_3\" reason=\"Never\"/><disable_collisions link1=\"link_1\"\
+      \ link2=\"link_4\" reason=\"Never\"/><disable_collisions link1=\"link_1\" link2=\"\
+      link_5\" reason=\"Never\"/><disable_collisions link1=\"link_1\" link2=\"link_6\"\
+      \ reason=\"Never\"/><disable_collisions link1=\"link_2\" link2=\"link_3\" reason=\"\
+      Adjacent\"/><disable_collisions link1=\"link_2\" link2=\"link_4\" reason=\"\
+      Never\"/><disable_collisions link1=\"link_2\" link2=\"link_5\" reason=\"Never\"\
+      /><disable_collisions link1=\"link_2\" link2=\"link_6\" reason=\"Never\"/><disable_collisions\
+      \ link1=\"link_3\" link2=\"link_4\" reason=\"Adjacent\"/><disable_collisions\
+      \ link1=\"link_3\" link2=\"link_5\" reason=\"Never\"/><disable_collisions link1=\"\
+      link_3\" link2=\"link_6\" reason=\"Never\"/><disable_collisions link1=\"link_4\"\
+      \ link2=\"link_5\" reason=\"Adjacent\"/><disable_collisions link1=\"link_4\"\
+      \ link2=\"link_6\" reason=\"Never\"/><disable_collisions link1=\"link_5\" link2=\"\
+      link_6\" reason=\"Adjacent\"/></robot>"
+    sensors:
+    - default_sensor
+    - kinect_depthimage
+    use_sim_time: true
+
