@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 from geometry_msgs.msg import TransformStamped
 
-from ament_index_python.packages import get_package_share_directory
+# from ament_index_python.packages import get_package_share_directory
 import os
 
 class ArmTrajectoryRecorder(Node):
@@ -51,7 +51,10 @@ class ArmTrajectoryRecorder(Node):
             # 找到功能包路径
             # pkg_path = get_package_share_directory("dmp_pkg")
             # file_path = os.path.join(pkg_path, "config", filename)
-            file_path = "/home/tree/robot2_arm_grasp/src/dmp_pkg/config/filename"
+            file_path = os.path.join(
+            "/home/tree/robot2_arm_grasp/src/dmp_pkg/config",
+            filename
+        )
             # 转成 numpy array 再转置 (shape: 3 × N)
             data = np.array(self.positions).T
             df = pd.DataFrame(data)

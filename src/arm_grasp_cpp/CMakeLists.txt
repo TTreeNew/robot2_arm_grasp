@@ -13,7 +13,7 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(moveit_ros_planning REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(tf2_geometry_msgs REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)   
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -30,6 +30,7 @@ endif()
 # 添加可执行文件
 add_executable(arm_test1 src/arm_test1.cpp)
 add_executable(arm_follow_point src/arm_follow_point.cpp)
+add_executable(arm_trajectory_execute src/arm_trajectory_execute.cpp)
 # 为可执行文件指定依赖
 ament_target_dependencies( arm_test1
   rclcpp
@@ -41,17 +42,24 @@ ament_target_dependencies( arm_test1
 )
 ament_target_dependencies( arm_follow_point
   rclcpp
-  moveit_core
+  # moveit_core
   moveit_ros_planning_interface
-  moveit_ros_planning
-  moveit_msgs
+  # moveit_ros_planning
+  # moveit_msgs
   geometry_msgs
   tf2_geometry_msgs 
+)
+ament_target_dependencies( arm_trajectory_execute
+  rclcpp
+  moveit_ros_planning_interface
+  moveit_msgs
+  geometry_msgs
 )
 # 安装可执行文件
 install(TARGETS
   arm_test1
   arm_follow_point
+  arm_trajectory_execute
   DESTINATION lib/${PROJECT_NAME}
 )
 

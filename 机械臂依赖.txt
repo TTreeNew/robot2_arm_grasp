@@ -1,1 +1,30 @@
 源码安装 moveit2 humble库
+
+
+#一些头文件记录
+#include <moveit/move_group_interface/move_group_interface.h>对应的依赖是 moveit_ros_planning_interface
+
+<moveit/planning_scene_interface/planning_scene_interface.h>
+功能：提供 PlanningSceneInterface 类，用于在规划场景中添加、移除和修改碰撞物体（如障碍物、桌面等）。当您需要在环境中添加障碍物或修改工作空间时使用。
+eg:moveit::planning_interface::PlanningSceneInterface planning_scene_interface;  // 添加碰撞物体到场景中
+
+<moveit/robot_state/robot_state.h>
+功能：提供 RobotState 类，表示机器人的完整状态（关节位置、速度、加速度等）。用于直接操作机器人状态、进行运动学计算或设置特定关节值。
+eg:moveit::core::RobotState current_state = move_group.getCurrentState();// 获取或设置特定关节值
+
+<moveit/robot_trajectory/robot_trajectory.h>
+功能：提供 RobotTrajectory 类，表示机器人的完整轨迹（一系列带时间戳的机器人状态）。用于分析和修改已规划的轨迹。
+eg:robot_trajectory::RobotTrajectory trajectory(robot_model);// 分析或修改轨迹参数
+
+<moveit/robot_model/robot_model.h>
+功能：提供 RobotModel 类，表示机器人的运动学模型（链接、关节、运动链等）。用于获取机器人的运动学结构和限制。
+eg:robot_model::RobotModelConstPtr robot_model = move_group.getRobotModel();// 获取运动学信息
+
+<moveit/robot_model_loader/robot_model_loader.h>
+功能：提供 RobotModelLoader 类，用于从 ROS 参数服务器加载机器人模型描述（URDF、SRDF）。通常在需要直接访问机器人模型而不使用 MoveGroupInterface 时使用。
+eg:	robot_model_loader::RobotModelLoader robot_model_loader(node);
+	robot_model::RobotModelPtr robot_model = robot_model_loader.getModel();
+	
+<moveit/moveit_cpp/moveit_cpp.h>
+功能：提供 MoveItCpp 类，是 MoveIt 的高级 C++ 接口，提供对规划场景、运动规划、机器人状态等的统一访问。通常用于需要更精细控制 MoveIt 组件的复杂应用程序。
+eg:auto moveit_cpp = std::make_shared<moveit_cpp::MoveItCpp>(node); // 通过 MoveItCpp 访问各种 MoveIt 组件

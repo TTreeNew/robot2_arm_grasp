@@ -66,7 +66,7 @@ def generate_launch_description():
         output='screen'
     )
 
-            ##加载机械臂控制器##
+    ##加载机械臂控制器##
     load_joint_trajectory_controller = launch.actions.ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller', 'arm_controller', '--set-state', 'active'],
         output='screen'
