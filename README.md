@@ -14,6 +14,8 @@
 - launch文件中的full_demo.launch.py为对配置助手生成的demo.launch.py的重写，demo.launch.py非常不直观，所以重写，两者是等价的。[full_demo.launch.py参考地址](https://www.bilibili.com/video/BV1CshJzdEpU?spm_id_from=333.788.player.switch&vd_source=bffdb80b975508dc5f2dd69ec6999b3b)。
   
 ## 运行
+把models文件夹复制到.gazebo里面和里面的models文件夹合并
+
 鼠标点击进入ros2_arm_ws目录。在终端中打开。运行下面命令，启动gazebo仿真环境。
 ```bash
 source install/setup.bash 
@@ -25,7 +27,19 @@ ros2 launch arm_description sim_with_moveit.launch.py
 source install/setup.bash 
 ros2 run arm_grasp_cpp arm_test1 --ros-args --params-file arm_params.yaml
 ```
-启动arm_test2.cpp的时候可以把rviz2里的motionplanning插件移除，添加robotmodel插件，话题选择robot_description，这样就能看到rviz的机械臂随着gazebo的机械臂一起动。
+
+记录末端笛卡尔坐标系下的轨迹，按ctrl c 停止节点并导出demo_trajectory_for_discrete_dmp.csv文件到dmp_pkg/config：
+```bash
+source install/setup.bash 
+ros2 run dmp_pkg arm_trajectory_record 
+```
+按点控制则启动：
+```bash
+source install/setup.bash 
+ros2 run arm_grasp_cpp arm_follow_point --ros-args --params-file arm_params.yaml
+```
+
+启动arm_test2.cpp前可以launch文件里rviz2里加载.rviz配置文件的地址。这样rviz2界面里的motionplanning插件就会替换成robotmodel插件，从而可以看到rviz的机械臂随着gazebo的机械臂一起动。
 
 (待补充)
 

@@ -6,7 +6,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from moveit_configs_utils import MoveItConfigsBuilder
 from launch_ros.actions import Node
 from launch import LaunchDescription
-# from launch.actions import TimerAction
+from launch.actions import TimerAction
 
 def generate_launch_description():
     """
@@ -77,7 +77,9 @@ def generate_launch_description():
         package="rviz2",
         executable="rviz2", 
         output="log", 
-        arguments=["-d",packagepath+'/config/moveit.rviz'],
+        # arguments=["-d",packagepath+'/config/moveit.rviz'],
+        arguments=["-d",'/home/tree/robot2_arm_grasp/src/arm_description/config/moveit.rviz'],
+        
         parameters=[
         moveit_config.robot_description, 
         moveit_config.robot_description_semantic, moveit_config.robot_description_kinematics, moveit_config.planning_pipelines, 
@@ -113,6 +115,9 @@ def generate_launch_description():
         )),  
         move_group_node,
 
-        # delayed_rviz,        
+        # TimerAction(
+        # period=7.0,
+        # actions=[rviz_node]
+        # )      
         rviz_node,
     ])
