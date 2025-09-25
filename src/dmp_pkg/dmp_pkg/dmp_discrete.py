@@ -9,7 +9,7 @@ import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
-from cs import CanonicalSystem
+from dmp_pkg.cs import CanonicalSystem
 
 #%% define discrete dmp
 class dmp_discrete():
@@ -104,7 +104,25 @@ class dmp_discrete():
 
         return self.w
 
-    def learning(self, y_demo, plot=False):
+    #保存生成的self.w为权重文件
+    def save_weights(self, weight_file_path):
+        """
+        保存 DMP 权重到指定路径，只保存 self.w
+        """
+        if self.w is None:
+            raise ValueError("权重 w 为空，无法保存")
+        
+        # 保存 w 到 .npy 文件
+        np.save(weight_file_path, self.w)
+        print(f"DMP权重已保存到 {weight_file_path}")
+
+    #加载指定的权重文件传给self.w
+    def load_weights(self,weight_file_path):
+        self.w = np.load(weight_file_path)
+        print(f"DMP权重已从 {weight_file_path} 加载")
+        return self.w
+
+    def learning(self, y_demo, plot=False,weight_file_path=None):
         if y_demo.ndim == 1: # data is with only one dimension
             y_demo = y_demo.reshape(1, len(y_demo))
 
@@ -178,11 +196,11 @@ class dmp_discrete():
             timesteps = round(self.timesteps/tau)
 
         # set initial state
-        if initial != None:
+        if initial is not None:
             self.y0 = initial
         
         # set goal state
-        if goal != None:
+        if goal is not None:
             self.goal = goal
         
         # reset state

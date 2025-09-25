@@ -1,6 +1,14 @@
 源码安装 moveit2 humble库
 
 
+Moveit:
+MoveIt 项目里有三个主要命名空间
+moveit::core：核心，主要类 RobotModel、RobotState、RobotTrajectory 对应头文件<moveit/robot_model/robot_model.h>、<moveit/robot_trajectory/robot_trajectory.h>。  核心数据结构，表示机器人模型和轨迹
+moveit::planning_interface：MoveGroupInterface 接口，主要类MoveGroupInterface 对应头文件<moveit/move_group_interface/move_group_interface.h>用于规划和执行接口，方便在 C++/Python 中使用 MoveIt。
+moveit::planning_scene_interface：主要类PlanningSceneInterface 对应头文件<moveit/planning_scene_interface/planning_scene_interface.h> 管理环境中的障碍物、碰撞对象等。
+
+
+
 #一些头文件记录
 #include <moveit/move_group_interface/move_group_interface.h>对应的依赖是 moveit_ros_planning_interface
 

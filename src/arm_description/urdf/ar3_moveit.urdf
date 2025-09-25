@@ -1,6 +1,11 @@
 <?xml version="1.0" ?>
 <robot name="ar3">
     <link name="base_footprint"/>
+    <!-- <link name="world"/>
+    <joint name="base_footprint2world" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>
+    </joint> -->
 
     <link name="base_link">
         <visual>
@@ -339,4 +344,3 @@
         </plugin>
     </gazebo>
 </robot>
-

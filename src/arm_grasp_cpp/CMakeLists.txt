@@ -8,10 +8,11 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(moveit_core REQUIRED)
-find_package(moveit_ros_planning_interface REQUIRED)
-find_package(moveit_ros_planning REQUIRED)
 find_package(moveit_msgs REQUIRED)
+find_package(moveit_ros_planning_interface REQUIRED)# MoveGroupInterface
+find_package(moveit_core REQUIRED)# RobotModel, RobotTrajectory
+
+# find_package(moveit_ros_planning REQUIRED)# RobotModelLoader
 find_package(geometry_msgs REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)   
 
@@ -54,6 +55,8 @@ ament_target_dependencies( arm_trajectory_execute
   moveit_ros_planning_interface
   moveit_msgs
   geometry_msgs
+  moveit_core
+  # moveit_ros_planning
 )
 # 安装可执行文件
 install(TARGETS
