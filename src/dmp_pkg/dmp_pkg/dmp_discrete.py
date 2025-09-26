@@ -122,7 +122,7 @@ class dmp_discrete():
         print(f"DMP权重已从 {weight_file_path} 加载")
         return self.w
 
-    def learning(self, y_demo, plot=False,weight_file_path=None):
+    def learning(self, y_demo, plot=False):
         if y_demo.ndim == 1: # data is with only one dimension
             y_demo = y_demo.reshape(1, len(y_demo))
 
@@ -235,7 +235,7 @@ class dmp_discrete():
             
             # ---------- Modified DMP with a simple solution to overcome the drawbacks of trajectory reproduction
             k = self.alpha_y[d]
-
+            self.delta[d] = self.goal[d] - self.y0[d]   #####补充。如果只加载权重，不调用learning()这一项会被漏掉
             self.delta_2[d] = self.goal[d] - self.y0[d] # Modified DMP extended
             if abs(self.delta[d]) > 1e-5:
                 k2 = self.delta_2[d]/self.delta[d]

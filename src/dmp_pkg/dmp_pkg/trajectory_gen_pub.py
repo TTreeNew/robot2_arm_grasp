@@ -14,67 +14,91 @@ if parent_dir not in sys.path:
 
 from dmp_pkg.dmp_discrete import dmp_discrete   # 这里假设你已经有 dmp_discrete.py
 
-# ==========================
-# 1. 读取示教轨迹
-# ==========================
-weight_file_path = "/home/tree/robot2_arm_grasp/src/dmp_pkg/config/up_to_down_trajectory.npy" #权重文件路径
-csv_file = "/home/tree/robot2_arm_grasp/src/dmp_pkg/config/demo_trajectory_for_discrete_dmp.csv"  # 你的csv文件路径
-df = pd.read_csv(csv_file, header=None)
-reference_trajectory = np.array(df)  #读取参考轨迹并获取初始位置和目标位置
-initial_pose = reference_trajectory[:,0].copy()
-goal_pose = reference_trajectory[:,-1].copy()
-
-# reference_trajectory 形状: (维度, 轨迹点数)
-data_dim = reference_trajectory.shape[0]
-data_len = reference_trajectory.shape[1]
-
-print(f"示教轨迹维度 = {data_dim}, 轨迹长度 = {data_len}")
-
-# ==========================
-# 2. DMP 学习
-# ==========================
-dmp = dmp_discrete(n_dmps=data_dim, n_bfs=1000, dt=1.0/data_len)
-# dmp.learning(y_demo = reference_trajectory)   #### 这个函数到底干嘛了？？？为什么有了权重之后还会影响轨迹
-
-# dmp.learning(y_demo = reference_trajectory)
-dmp.load_weights(weight_file_path)
-# ==========================
-# 3. DMP 生成轨迹
-# ==========================
-
-reproduced_trajectory, _, _ = dmp.reproduce(initial=initial_pose, goal=goal_pose)
+import rclpy
+from rclpy.node import Node
 
 
-print(f"DMP生成轨迹形状: {reproduced_trajectory.shape}")
+class TrajectoryGenPub(Node):
 
-# ==========================
-# 4. 画图对比
-# ==========================
+    def __init__(self):
+        super().__init__('trajectory_gen_pub')
+        # self.current_state = self.create_client(/* srv_type */, '/* srv_name */')
+        self.weight_file_path = "/home/tree/robot2_arm_grasp/src/dmp_pkg/config/up_to_down_trajectory.npy" #权重文件路径
+        self.csv_file = "/home/tree/robot2_arm_grasp/src/dmp_pkg/config/demo_trajectory_for_discrete_dmp.csv"  # 你的csv文件路径
+        self.df = pd.read_csv(self.csv_file, header=None)
+        self.reference_trajectory = np.array(self.df).copy()  #读取参考轨迹
+        self.data_dim = 1
+        self.data_len = 1
+        self.reproduced_trajectory = self.dmp_trajectory_gen()
+        self.plot_dmp_trajectory(self.reference_trajectory,self.reproduced_trajectory)
+        
+    def dmp_trajectory_gen(self,initial_pose = None):
+        # ==========================
+        # 1. 读取示教轨迹
+        # ==========================
 
-# --- 3D 轨迹图 ---
-# plt.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot(reference_trajectory[0, :], reference_trajectory[1, :], reference_trajectory[2, :],
-        'g', label="reference_trajectory")
-ax.plot(reproduced_trajectory[:, 0], reproduced_trajectory[:, 1], reproduced_trajectory[:, 2],
-        'r--', label="reproduced_trajectory")
-ax.legend()
-ax.set_xlabel("X")
-ax.set_ylabel("Y")
-ax.set_zlabel("Z")
-plt.title("reference_trajectory vs reproduced_trajectory")
+        if initial_pose is None:
+            initial_pose = self.reference_trajectory[:,0].copy()
+        else:
+            initial_pose = initial_pose.copy()
+        goal_pose = self.reference_trajectory[:,-1].copy()
 
-# --- 各维度对比 ---
-fig, axs = plt.subplots(data_dim, 1, figsize=(8, 6))
-for i in range(data_dim):
-    axs[i].plot(reference_trajectory[i, :], 'g', label='demo')
-    axs[i].plot(reproduced_trajectory[:, i], 'r--', label='DMP')
-    axs[i].legend()
-    axs[i].set_ylabel(f"Dim {i+1}")
-plt.xlabel("Time step")
-plt.suptitle("dim_comparison")
+        # reference_trajectory 形状: (维度, 轨迹点数)
+        self.data_dim = self.reference_trajectory.shape[0]
+        self.data_len = self.reference_trajectory.shape[1]
 
-plt.show()
+        print(f"示教轨迹维度 = {self.data_dim}, 轨迹长度 = {self.data_len}")
+
+        # ==========================
+        # 2. DMP 学习
+        # ==========================
+        dmp = dmp_discrete(n_dmps=self.data_dim, n_bfs=1000, dt=1.0/self.data_len)
+
+        dmp.load_weights(self.weight_file_path)
+        # ==========================
+        # 3. DMP 生成轨迹
+        # ==========================
+
+        reproduced_trajectory, _, _ = dmp.reproduce(initial=initial_pose, goal=goal_pose)
+        return reproduced_trajectory
+
+    # print(f"DMP生成轨迹形状: {reproduced_trajectory.shape}")
+
+    # ==========================
+    # 4. 画图对比
+    # ==========================
+
+    # --- 3D 轨迹图 ---
+    def plot_dmp_trajectory(self,reference_trajectory,reproduced_trajectory):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot(reference_trajectory[0, :], reference_trajectory[1, :], reference_trajectory[2, :],
+                'g', label="reference_trajectory")
+        ax.plot(reproduced_trajectory[:, 0], reproduced_trajectory[:, 1], reproduced_trajectory[:, 2],
+                'r--', label="reproduced_trajectory")
+        ax.legend()
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_zlabel("Z")
+        plt.title("reference_trajectory vs reproduced_trajectory")
+
+        # --- 各维度对比 ---
+        fig, axs = plt.subplots(self.data_dim, 1, figsize=(8, 6))
+        for i in range(self.data_dim):
+            axs[i].plot(reference_trajectory[i, :], 'g', label='demo')
+            axs[i].plot(reproduced_trajectory[:, i], 'r--', label='DMP')
+            axs[i].legend()
+            axs[i].set_ylabel(f"Dim {i+1}")
+        plt.xlabel("Time step")
+        plt.suptitle("dim_comparison")
+
+        plt.show()
 
 
+def main(args=None):
+    rclpy.init(args=args)
+    rclpy.spin(TrajectoryGenPub())
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
