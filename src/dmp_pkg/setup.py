@@ -13,7 +13,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'config'), glob('config/*')),
     ],
-    install_requires=['setuptools', 'numpy', 'pandas','scipy','matplotlib'],
+    install_requires=['setuptools', 'numpy', 'pandas','scipy','matplotlib',"my_robot_interfaces"],
     zip_safe=True,
     maintainer='tree',
     maintainer_email='swang2792@gmail.com',

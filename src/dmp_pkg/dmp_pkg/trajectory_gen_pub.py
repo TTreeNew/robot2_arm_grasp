@@ -3,20 +3,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-
-import sys
-import os
-# 添加模块路径
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
-
 from dmp_pkg.dmp_discrete import dmp_discrete   # 这里假设你已经有 dmp_discrete.py
 
 import rclpy
 from rclpy.node import Node
-
+from my_robot_interfaces.srv import ArmposeToTrajectory  # 自定义接口
+from geometry_msgs.msg import Point
+# import sys
+# import os
+# # 添加模块路径
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# if parent_dir not in sys.path:
+#     sys.path.insert(0, parent_dir)
 
 class TrajectoryGenPub(Node):
 
@@ -29,9 +28,21 @@ class TrajectoryGenPub(Node):
         self.reference_trajectory = np.array(self.df).copy()  #读取参考轨迹
         self.data_dim = 1
         self.data_len = 1
-        self.reproduced_trajectory = self.dmp_trajectory_gen()
-        self.plot_dmp_trajectory(self.reference_trajectory,self.reproduced_trajectory)
+        self.srv = self.create_service(ArmposeToTrajectory, 'generate_trajectory', self.generate_trajectory_callback)        
+        # self.plot_dmp_trajectory(self.reference_trajectory,self.reproduced_trajectory)
+   
+
+    def generate_trajectory_callback(self, request, response):
+        current_pose = request.current_state
+        self.get_logger().info(f"Received current_state: x={current_pose.x}, y={current_pose.y}, z={current_pose.z}")
+
+        self.reproduced_trajectory = self.dmp_trajectory_gen(initial_pose = current_pose)
         
+
+        response.trajectory = self.reproduced_trajectory
+        self.get_logger().info(f"Sending trajectory with {len(response.trajectory)} points")
+        return response
+    
     def dmp_trajectory_gen(self,initial_pose = None):
         # ==========================
         # 1. 读取示教轨迹
@@ -97,8 +108,11 @@ class TrajectoryGenPub(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    rclpy.spin(TrajectoryGenPub())
+    node = TrajectoryGenPub()
+    while rclpy.ok() and not node.called:
+        rclpy.spin_once(node)  # 只处理一次事件循环
     rclpy.shutdown()
+    # self.plot_dmp_trajectory(self.reference_trajectory,self.reproduced_trajectory)
 
 if __name__ == '__main__':
     main()

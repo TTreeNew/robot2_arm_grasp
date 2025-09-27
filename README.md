@@ -40,20 +40,28 @@ source install/setup.bash
 ros2 run arm_grasp_cpp arm_follow_point --ros-args --params-file arm_params.yaml
 ```
 
-按点控制则启动：
+获得生成的dmp轨迹（并执行）：
 ```bash
 source install/setup.bash 
 ros2 run arm_grasp_cpp arm_trajectory_execute --ros-args --params-file arm_params.yaml
 ```
-
-
+加载教学轨迹并保存权重：
+```bash
+source install/setup.bash 
+ros2 run dmp_pkg save_weight
+```
+加载保存的权重并生成dmp轨迹（并发布出去）：
+```bash
+source install/setup.bash 
+ros2 run dmp_pkg trajectory_gen_pub
+```
 
 (待补充)
 
 ## 修改
 此为原项目的重写而非移植，按照原代码的思路做了一些调整
 ### 对原ros1的urdf文件修改
-1. urdf文件里删去了虚拟关节world，虚拟关节world在moveit2调试助手里声明(即在launch文件里发布world到机械臂的tf变换)，关节名称virtual_joint，父坐标系world。
+1. urdf文件里删去了虚拟关节world，虚拟关节world在moveit2调试助手里声明(即在launch文件里发布world到机械臂的tf变换)，关节名称virtual_joint，父坐标系world。（如果是固定基座好像不能删？）
 2. 原项目urdf文件中虽然有ros_control插件，但是似乎并没有使用ros_control控制，使用的是gazebo的`gazebo_msgs/SetModelState.h`，通过向`/gazebo/set_model_state`发布消息控制机械臂。这里改为使用ros2_control。
 3.  `<gazebo>`里的激光雷达插件换成了libgazebo_ros_ray_sensor.so
 4.   urdf文件里的gazebo标签里的插件标签用的驼峰命名，不知道有没有问题，我改成下划线命名了，比如：`<frameName>`变成`<frame_name>`。并且删除了`<gazebo>`里link_7标签。
