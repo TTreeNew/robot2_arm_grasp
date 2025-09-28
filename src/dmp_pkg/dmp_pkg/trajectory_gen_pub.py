@@ -28,7 +28,7 @@ class TrajectoryGenPub(Node):
         self.reference_trajectory = np.array(self.df).copy()  #读取参考轨迹
         self.data_dim = 1
         self.data_len = 1
-        self.srv = self.create_service(ArmposeToTrajectory, 'generate_trajectory', self.generate_trajectory_callback)        
+        self.srv = self.create_service(ArmposeToTrajectory, 'armpose_to_trajectory', self.generate_trajectory_callback)        
         # self.plot_dmp_trajectory(self.reference_trajectory,self.reproduced_trajectory)
    
 
@@ -109,10 +109,12 @@ class TrajectoryGenPub(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = TrajectoryGenPub()
-    while rclpy.ok() and not node.called:
-        rclpy.spin_once(node)  # 只处理一次事件循环
-    rclpy.shutdown()
+    # while rclpy.ok() and not node.called:
+    #     rclpy.spin_once(node)  # 只处理一次事件循环
+    # rclpy.shutdown()
     # self.plot_dmp_trajectory(self.reference_trajectory,self.reproduced_trajectory)
+    rclpy.spin_once(node)  # 只处理一次事件循环
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
