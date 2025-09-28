@@ -63,7 +63,6 @@ public:
 private:
   rclcpp::Client<ArmposeToTrajectory>::SharedPtr trajectory_execute_client;
   std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group;
-  rclcpp::Client<ArmposeToTrajectory>::SharedPtr trajectory_execute_client_;
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
 
@@ -73,27 +72,31 @@ private:
     
     try {
       // 获取从基座标系到末端坐标系的变换
-      // 假设你的基座标系是 "base_link"，末端坐标系是 "end_effector_link"
-      auto transform = tf_buffer_.lookupTransform(
+      geometry_msgs::msg::TransformStamped tf_stamped = tf_buffer_.lookupTransform(
           "base_link", "camera_link", 
           tf2::TimePointZero, 1s);
       
-      current_position.x = transform.transform.translation.x;
-      current_position.y = transform.transform.translation.y;
-      current_position.z = transform.transform.translation.z;
+      current_position.x = tf_stamped.transform.translation.x;
+      current_position.y = tf_stamped.transform.translation.y;
+      current_position.z = tf_stamped.transform.translation.z;
       
       RCLCPP_INFO(this->get_logger(), "通过TF获取末端坐标: (%.3f, %.3f, %.3f)", 
                   current_position.x, current_position.y, current_position.z);
                   
     } catch (const tf2::TransformException &ex) {
       RCLCPP_ERROR(this->get_logger(), "TF变换获取失败: %s", ex.what());
-      return current_position;
-  }
+    }
+    return current_position;
   }
 
   void trajectory_execute_callback(rclcpp::Client<ArmposeToTrajectory>::SharedFuture future)
   {
     auto response = future.get();
+    if (!response) {
+      RCLCPP_ERROR(this->get_logger(), "服务返回空响应");
+      return;
+    }
+
     const auto &traj_points = response->trajectory;  // std::vector<Point>
 
     // 初始化 MoveGroupInterface（planning group "arm"）
@@ -113,7 +116,7 @@ private:
     // 笛卡尔路径规划
     moveit_msgs::msg::RobotTrajectory trajectory;
     double eef_step = 0.01;
-    double jump_threshold = 0.0;
+    double jump_threshold = 0.0;  //设成0实机有危险
 
     double fraction = move_group->computeCartesianPath(
         waypoints, eef_step, jump_threshold, trajectory);
