@@ -51,7 +51,10 @@ def generate_launch_description():
     ##启动gazebo同时加载环境
     launch_gazebo = launch.actions.IncludeLaunchDescription(
         PythonLaunchDescriptionSource([get_package_share_directory('gazebo_ros'),'/launch/gazebo.launch.py']),
-        launch_arguments=[('world',str(word_pkg_path)+default_world_path),('verbose','true'),]
+        launch_arguments=[('world',str(word_pkg_path)+default_world_path),
+                          ('verbose','true'),
+                          ('use_sim_time', 'true'),   # 启用仿真时间,需要显式设置才会发布/clock
+                        ]
     )
 
     ##生成加载机器人的节点，控制器在这里启动##

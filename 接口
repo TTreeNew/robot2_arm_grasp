@@ -11,3 +11,8 @@ Quaternion orientation
 	float64 w 1
 
 
+#机械臂末端当前位置的笛卡尔坐标
+geometry_msgs/Point current_state
+---
+#机械臂末端轨迹
+geometry_msgs/Point[] trajectory

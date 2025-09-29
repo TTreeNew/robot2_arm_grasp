@@ -40,7 +40,7 @@ source install/setup.bash
 ros2 run arm_grasp_cpp arm_follow_point --ros-args --params-file arm_params.yaml
 ```
 
-获得生成的dmp轨迹（并执行）：
+服务的客户端，发送机械臂当前位置给服务端获得生成的dmp轨迹并执行：
 ```bash
 source install/setup.bash 
 ros2 run arm_grasp_cpp arm_trajectory_execute --ros-args --params-file arm_params.yaml
@@ -50,7 +50,7 @@ ros2 run arm_grasp_cpp arm_trajectory_execute --ros-args --params-file arm_param
 source install/setup.bash 
 ros2 run dmp_pkg save_weight
 ```
-加载保存的权重并生成dmp轨迹（并发布出去）：
+服务的服务端，接收机械臂末端当前位置作为起始位置。然后加载保存的权重生成对应的dmp轨迹：
 ```bash
 source install/setup.bash 
 ros2 run dmp_pkg trajectory_gen_pub
@@ -101,4 +101,6 @@ arm:
   kinematics_solver: null
 ```
 外所有的值为null的行全部删除③把`kinematics_solver: null`换成`kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin`
+
+1. launch文件里启动gazebo的时候需要在参数那里显式设置('use_sim_time', 'true'),gazebo才会发布/clock 。如果gazebo不发布/clock ，其他use_sim_time的节点不能获得 sim_time
     

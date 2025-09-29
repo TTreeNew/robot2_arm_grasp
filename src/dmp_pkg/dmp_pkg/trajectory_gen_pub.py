@@ -38,8 +38,12 @@ class TrajectoryGenPub(Node):
 
         self.reproduced_trajectory = self.dmp_trajectory_gen(initial_pose = current_pose)
         
+        # 转换 numpy -> Point[]
+        response.trajectory = [
+            Point(x=float(pt[0]), y=float(pt[1]), z=float(pt[2]))
+            for pt in self.reproduced_trajectory
+        ]
 
-        response.trajectory = self.reproduced_trajectory
         self.get_logger().info(f"Sending trajectory with {len(response.trajectory)} points")
         return response
     
@@ -51,7 +55,8 @@ class TrajectoryGenPub(Node):
         if initial_pose is None:
             initial_pose = self.reference_trajectory[:,0].copy()
         else:
-            initial_pose = initial_pose.copy()
+            # 将 Point 转换成 numpy 数组
+            initial_pose = np.array([initial_pose.x, initial_pose.y, initial_pose.z])
         goal_pose = self.reference_trajectory[:,-1].copy()
 
         # reference_trajectory 形状: (维度, 轨迹点数)
