@@ -26,7 +26,7 @@
         <inertial>
             <origin rpy="0 0 0" xyz="0 0 0" />
             <mass value="20" />
-            <inertia ixx="1E-2" ixy="0" ixz="0" iyy="1E-2" iyz="0" izz="1E-2" />
+            <inertia ixx="0.167" ixy="0" ixz="0" iyy="0.167" iyz="0" izz="0.3" />
         </inertial>
     </link>
     <joint name="base_link2base_footprint" type="fixed">
@@ -230,13 +230,91 @@
             <inertia ixx="1.04167E-7" ixy="0" ixz="0" iyy="1.66667E-7" iyz="0" izz="1.04167E-7" />
         </inertial>
     </link>
-    <joint name="camera_joint" type="fixed">
+    <joint name="camera_joint" type="fixed">     <!-- continuous   fixed -->
         <origin rpy="1.5707963 -1.5707963 0" xyz="0 0 0.016" />
         <!-- <origin rpy="0 0 0" xyz="0.044 0.023 0.1" /> -->
-        <parent link="link_6" />
+        <parent link="ball_link_z" />
         <child link="camera_link" />
         <axis xyz="0 0 0" />
     </joint>
+
+    <!-- 在末端 link_6 后面添加一个自由旋转的球形关节 -->
+    <link name="ball_link_x">
+    <visual>
+        <geometry>
+        <sphere radius="0.01"/>  <!-- 球半径仅做可视化，可改 -->
+        </geometry>
+        <material name="blue"/>
+    </visual>
+    <collision>
+        <geometry>
+        <sphere radius="0.01"/>
+        </geometry>
+    </collision>
+    <inertial>
+        <mass value="0.001"/>
+        <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
+    </inertial>
+    </link>
+    <joint name="ball_joint_x" type="continuous">
+    <parent link="link_6"/>
+    <child link="ball_link_x"/>
+    <!-- 关节偏移，可根据机械臂末端实际位置调整 -->
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <!-- 旋转轴，continuous 类型可绕任意轴旋转，这里绕 x 轴 -->
+    <axis xyz="1 0 0"/>
+    </joint>
+
+    <link name="ball_link_y">
+    <visual>
+        <geometry>
+        <sphere radius="0.01"/>  <!-- 球半径仅做可视化 -->
+        </geometry>
+        <material name="blue"/>
+    </visual>
+    <collision>
+        <geometry>
+        <sphere radius="0.01"/>
+        </geometry>
+    </collision>
+    <inertial>
+        <mass value="0.001"/>
+        <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
+    </inertial>
+    </link>
+    <joint name="ball_joint_y" type="continuous">
+    <parent link="ball_link_x"/>
+    <child link="ball_link_y"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="ball_link_z">
+    <visual>
+        <geometry>
+        <sphere radius="0.01"/>  <!-- 球半径仅做可视化，可改 -->
+        </geometry>
+        <material name="blue"/>
+    </visual>
+    <collision>
+        <geometry>
+        <sphere radius="0.01"/>
+        </geometry>
+    </collision>
+    <inertial>
+        <mass value="0.001"/>
+        <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
+    </inertial>
+    </link>
+    <joint name="ball_joint_z" type="continuous">
+    <parent link="ball_link_y"/>
+    <child link="ball_link_z"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    </joint>
+
+    
+
 
     <!-- camera -->
     <gazebo reference="camera_link">
@@ -308,6 +386,7 @@
     <gazebo reference="base_link">
         <material>Gazebo/Orange</material>
         <turnGravityOff>false</turnGravityOff>
+        <!-- <static>true</static> -->   <!-- 遵循物理规则，通过增大基座质量实现基座固定 -->
     </gazebo>
     <gazebo reference="link_1">
         <material>Gazebo/Green</material>
@@ -337,6 +416,20 @@
         <material>Gazebo/Red</material>
         <turnGravityOff>false</turnGravityOff>
     </gazebo>
+
+    <gazebo reference="ball_link_x">
+        <material>Gazebo/Green</material>
+        <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+    <gazebo reference="ball_link_y">
+        <material>Gazebo/Green</material>
+        <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+    <gazebo reference="ball_link_z">
+        <material>Gazebo/Green</material>
+        <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
     <gazebo>
         <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
             <parameters>$(find arm_moveit_config)/config/ros2_controllers.yaml</parameters>

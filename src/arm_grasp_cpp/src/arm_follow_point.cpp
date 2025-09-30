@@ -84,6 +84,10 @@ int main(int argc, char **argv)
     target_pose1.pose.position.y = -0.463;
     target_pose1.pose.position.z = 0.033;
     target_pose1.pose.orientation = euler_to_quaternion(0.321, 1.490, -1.383);
+    // target_pose1.pose.orientation.x = 0;
+    // target_pose1.pose.orientation.y = 0;
+    // target_pose1.pose.orientation.z = 0;
+    // target_pose1.pose.orientation.w = 1;
 
     target_pose2.header.frame_id = "base_link"; //过度1
     target_pose2.pose.position.x = 0.099;

@@ -15,5 +15,8 @@ moveit_simple_controller_manager:
       - joint_4
       - joint_5
       - joint_6
+      - ball_joint_x
+      - ball_joint_y
+      - ball_joint_z
     action_ns: follow_joint_trajectory
     default: true

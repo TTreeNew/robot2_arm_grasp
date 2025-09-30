@@ -52,6 +52,25 @@
                 <state_interface name="velocity"/>
             </joint>
 
+            <joint name="ball_joint_x">
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['ball_joint_x']}</param>
+                </state_interface>
+                <state_interface name="velocity"/>
+            </joint>
+            <joint name="ball_joint_y">
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['ball_joint_y']}</param>
+                </state_interface>
+                <state_interface name="velocity"/>
+            </joint>
+            <joint name="ball_joint_z">
+                <state_interface name="position">
+                  <param name="initial_value">${initial_positions['ball_joint_z']}</param>
+                </state_interface>
+                <state_interface name="velocity"/>
+            </joint>
+
         </ros2_control>
     </xacro:macro>
 </robot>

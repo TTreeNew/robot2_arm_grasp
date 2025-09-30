@@ -72,7 +72,7 @@ ros2 run dmp_pkg trajectory_gen_pub
 2. 调试助手中，规划组取名arm，全部放入arm这一个规划组，初始姿态取名init_pose。passive joint跳过。
 3. ros2_controller使用位置控制，控制器选择`joint_trajectory_controller/JointTrajectoryController`，
 4. controller name 自动生成，自动生成的名字就是 arm_controller,这个名字就是ros2_controller配置文件里给插件取的名字，最好和moveit controllers里取的名字一样。控制器类型默认的`joint_trajectory_controller/JointTrajectoryController`。
-5. moveit控制器也叫ros2_arm_controller，名字不一致需要自己修改action_ns（不知道moveit配置助手好像不会修改action_ns）（这里的 FollowJointTrajectory 是告诉moveit通过`/arm_joint_trajectory_controller/follow_joint_trajectory`这个action服务向ros2_controller发送消息控制机械臂。FollowJointTrajectory是这个接口使用的action消息类型的名字）
+5. moveit控制器也叫ros2_arm_controller，名字不一致需要自己修改action_ns（moveit配置助手好像不会修改action_ns）（这里的 FollowJointTrajectory 是告诉moveit通过`/arm_joint_trajectory_controller/follow_joint_trajectory`这个action服务向ros2_controller发送消息控制机械臂。FollowJointTrajectory是这个接口使用的action消息类型的名字）
 ### rviz2验证之前对配置助手生成文件的修改
 1. 找到生成的moveit_controllers.yaml文件，arm_controllers如果没有写action_ns，手动补上
 ```yaml
@@ -82,7 +82,7 @@ default: true
 不然执行轨迹的时候找不到arm控制器无法完成execute。
 
 ### gazebo仿真之前的修改
-1.   把`<mesh filename="package://arm_description/meshes/base_link.STL" />`这种写mesh文件路径方式换成`<mesh filename="file://$(find arm_description)/meshes/base_link.STL" />`，这样之后rviz2和gazebo都能正常显示，否则gazebo无法解析mesh文件路径。但是这样之后moveit2调试助手又无法显示模型了，如果要使用moveit2调试助手又要改回原来的package://写法。查找 `"package://arm_description` 换成 `"file://$(find arm_description)`
+1.   由于我使用的是gazebo11，所以把`<mesh filename="package://arm_description/meshes/base_link.STL" />`这种写mesh文件路径方式换成`<mesh filename="file://$(find arm_description)/meshes/base_link.STL" />`，这样之后rviz2和gazebo11都能正常显示，否则gazebo11无法解析mesh文件路径。但是这样之后moveit2调试助手又无法显示模型了，如果要使用moveit2调试助手又要改回原来的package://写法。查找（ctrl F） `"package://arm_description` 换成 `"file://$(find arm_description)`
 2.  把`src/arm_moveit_config/config/ar3.ros2_control.xacro`里的`mock_components/GenericSystem`插件改成`gazebo_ros2_control/GazeboSystem`
 3. 把
 `src/arm_moveit_config/config/moveit_controllers.yaml`里的`moveit_simple_controller_manager/MoveItSimpleControllerManager`改成`moveit_ros_control_interface/Ros2ControlManager`
@@ -102,5 +102,5 @@ arm:
 ```
 外所有的值为null的行全部删除③把`kinematics_solver: null`换成`kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin`
 
-1. launch文件里启动gazebo的时候需要在参数那里显式设置('use_sim_time', 'true'),gazebo才会发布/clock 。如果gazebo不发布/clock ，其他use_sim_time的节点不能获得 sim_time
+6. launch文件里启动gazebo的时候需要在参数那里显式设置('use_sim_time', 'true'),gazebo才会发布/clock 。如果gazebo不发布/clock ，其他use_sim_time的节点不能获得 sim_time
     
